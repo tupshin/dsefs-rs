@@ -1,6 +1,6 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
-}
+extern crate yaml_rust;
+extern crate crest;
+
+pub mod dsefs;
+
+pub use dsefs::config::Config;

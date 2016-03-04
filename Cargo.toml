@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Tupshin Harper <tupshin@tupshin.com>"]
 
 [dependencies]
+yaml-rust = "0.3.0"
 
 [dependencies.crest]
 version = "0.3"
