@@ -4,3 +4,8 @@ version = "0.1.0"
 authors = ["Tupshin Harper <tupshin@tupshin.com>"]
 
 [dependencies]
+
+[dependencies.crest]
+version = "0.3"
+default-features = false
+features = ["nightly"]
