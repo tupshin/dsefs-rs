@@ -1,0 +1,6 @@
+[package]
+name = "dsefs"
+version = "0.1.0"
+authors = ["Tupshin Harper <tupshin@tupshin.com>"]
+
+[dependencies]
