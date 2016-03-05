@@ -43,9 +43,7 @@ impl Config {
 			}
 		
 	};
-		let config = Config{path:CONFIG_FILE.to_owned(),uris:uris, fs_name:fs_name};
-		println!("config: {:?}", config);
-		Ok(config)
+		Ok(Config{path:CONFIG_FILE.to_owned(),uris:uris, fs_name:fs_name})
 	}
 	
 	pub fn uris(&self) -> Vec<SocketAddr> {
