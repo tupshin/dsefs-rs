@@ -5,34 +5,50 @@ use std::net::SocketAddr;
 use std::io::Error as IoError;
 use std::fs::File;
 use std::io::prelude::*;
+use std::str::FromStr;
 
+#[derive(Debug)]
 pub struct Config {
 	path:String,
-	uris:Vec<SocketAddr>
+	uris:Vec<SocketAddr>,
+	fs_name: String
 }
 
-static config_file:&'static str = "dsefs-rs.yaml";
+static CONFIG_FILE:&'static str = "dsefs-rs.yaml";
 
 impl Config {
 
 	pub fn build() -> Result<Self,IoError> {
-		let mut yaml_file = try!(File::open(config_file));
+		let mut yaml_file = try!(File::open(CONFIG_FILE));
 		let mut yaml_string = String::new();
 		try!(yaml_file.read_to_string(&mut yaml_string));		
-		let yaml_config = &YamlLoader::load_from_str(&mut yaml_string).unwrap()[0];
-		println!("yaml_config: {:?}", yaml_config);
-//		yaml_config.
-		let uris = vec!();
-		
-		match yaml_config {
-			&Yaml::Hash(hash) => {
-				for key in hash.keys() {
-					//println!("key: {}", key);
-				}
+		let yaml_config = &YamlLoader::load_from_str(&mut yaml_string).unwrap().clone()[0];
+		let yaml_config = yaml_config.as_hash().expect("bad config");
+		let mut uris = vec!();
+		let mut fs_name = String::new();
+		for (k,v) in yaml_config.iter() {
+			match k {
+				&Yaml::String(ref key) => match key.as_ref() {
+					"fs_name" => {
+						fs_name = v.as_str().expect("bad_config").to_owned();
+					},
+					"endpoints" => {
+						for uri in v.as_vec().expect("bad_config") {
+							uris.push(SocketAddr::from_str(uri.as_str().expect("bad_config")).unwrap());
+						}
+					},
+					other => panic!("other: {}", other)
+				},
+				_ => panic!()
 			}
-			_ => unimplemented!()	
-					
-		};
-		Ok(Config{path:config_file.to_owned(),uris:uris})
+		
+	};
+		let config = Config{path:CONFIG_FILE.to_owned(),uris:uris, fs_name:fs_name};
+		println!("config: {:?}", config);
+		Ok(config)
+	}
+	
+	pub fn uris(&self) -> Vec<SocketAddr> {
+		self.uris.clone()
 	}
 }	
